@@ -8,7 +8,8 @@ public:
     {
         message = theMessage;
     }
-    void outputMassage();
+    void outputMassage(ostream& out) const;
+    void outputMassage() const;
 private:
     string message;
 };
@@ -21,3 +22,4 @@ void displayArray(T a[], int arrayLength)
     }
     cout << endl;
 }
+ostream & operator<<(ostream & out, const illegalParameterValue & err);

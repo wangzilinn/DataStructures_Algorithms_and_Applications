@@ -20,20 +20,20 @@ void changeLength2D(T ** &head, int row, int oldLength, int newLength)//未测试
 
 //class arrayList
 template<class T>
-class linerList//线性表,抽象类
+class linearList//线性表,抽象类
 {
 public:
-    virtual ~linerList() {};
+    virtual ~linearList() {};
     virtual bool empty() const = 0;
     virtual int size() const = 0;  
-    virtual T& get() const = 0;
-    virtual int indexOf() const = 0;
+    virtual T& get(int theIndex) const = 0;
+    virtual int indexOf(const T& theElement) const = 0;
     virtual void earse(int theIndex) = 0;
     virtual void insert(int theIndex, const T& theElement) = 0;
     virtual void output(ostream& out) const = 0;
 };
 template <class T>
-class arrayList:public linerList<T>
+class arrayList:public linearList<T>
 {
 protected: 
     T* element;
@@ -87,7 +87,8 @@ arrayList<T>::arrayList(const arrayList<T>& theList)
 template <class T>
 void arrayList<T>::checkList(int theIndex) const
 {
-    if (theIndex < 0 || theIndex > arrayLength - 1)
+    if (theIndex > listSize || theIndex < 0)
+        //允许等于线性表长度是因为插入操作时也要进行索引的校验，但此时theIndex等于线性表长度
     {
         throw illegalParameterValue("非法的索引");
     }
