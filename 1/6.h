@@ -17,7 +17,7 @@ struct chainNode
 };
 
 template <class T>
-class chain:public linearList<T>
+class chain :public linearList<T>
 {
 protected:
     chainNode<T> * firstNode;//指向链表第一个元素
@@ -36,6 +36,7 @@ public:
     void insert(int theIndex, const T& theElement);
     void output(ostream & out) const;
     void binSort(int range);
+    void binSort(unsigned int from, unsigned int to);
 };
 template<class T>
 chain<T>::chain(int initCapacity)//参数无实际意义，仅为了与数组线性表统一
@@ -187,7 +188,7 @@ void chain<T>::binSort(int range)
     top = new chainNode<T>*[range + 1];
     for (int b = 0; b <= range; b++)
     {
-        bottom = nullptr;
+        bottom[b] = nullptr;
     }
     //把节点链表分配到箱子
     for (; firstNode != nullptr; firstNode = firstNode->next)
@@ -200,8 +201,8 @@ void chain<T>::binSort(int range)
         else
         {
             //箱子不空
-            top[theBin]->next = firstNode;//链表尾部，其实next指向哪无所谓
-            top[theBin] = firstNode;
+            top[theBin]->next = firstNode;
+            top[theBin] = firstNode;//top往上移动了一格
         }
     }
     //把箱子中的节点收集到有序列表
@@ -226,6 +227,59 @@ void chain<T>::binSort(int range)
     {
         y->next = nullptr;
     }
+    delete[] bottom;
+    delete[] top;
+}
+template <class T>
+void chain<T>::binSort(unsigned int from, unsigned int to)
+{
+    if (to < from)
+        throw illegalParameterValue("to必须大于等于from");
+    int theNumberOfBins = to - from + 1;//确定箱子个数
+    chainNode<T>** top = new chainNode<T>*[theNumberOfBins];//创建指向箱子顶部和箱子尾部的指针数组
+    chainNode<T>** bottom = new chainNode<T>*[theNumberOfBins];
+
+    for (int i = 0; i < theNumberOfBins; i++)
+    {
+        bottom[i] = top[i] = nullptr;//防止指针乱指
+    }
+    //装入箱子
+    while (firstNode != nullptr)
+    {
+        int binNumber = firstNode->element - from;
+        if (bottom[binNumber] == nullptr)//如果箱子为空，那么让箱子对应的top和bottom都指向箱子底部，同时指向链表头
+        {
+            bottom[binNumber] = top[binNumber] = firstNode;
+        }
+        else
+        {
+            //这两步着重理解：
+            //原来的top指向了上一个位置，
+            //第一步是使top的下一个指向链表头（即作用是让箱子的上一个节点指向链表头）
+            //第二步是使top指向链表头（即让top向上移动了一格）
+            top[binNumber]->next = firstNode;
+            top[binNumber] = firstNode;
+        }
+        firstNode = firstNode->next;
+    }
+    //从箱子中取出
+    chainNode<T> * pointer = nullptr;//用于连接各个箱子的指针
+    for (int i = 0; i < theNumberOfBins; i++)
+    {
+        if (bottom[i] != nullptr)
+        {
+            if (pointer == nullptr)//寻找第一个非空的箱子
+            {
+                firstNode = bottom[i];
+            }
+            else
+            {
+                pointer->next = bottom[i];//此时pointer指向的是上一个箱子的头，所以让他的下一个指向本次循环的底
+            }
+            pointer = top[i];
+        }
+    }
+    pointer->next = nullptr;
     delete[] bottom;
     delete[] top;
 }
