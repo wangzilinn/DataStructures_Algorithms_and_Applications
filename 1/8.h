@@ -18,7 +18,7 @@ private:
     chainNode<T>* stackTop;
     int stackSize;
 public:
-    linkedStack() { stacKTop = nullptr; stackSize = 0; }
+    linkedStack() { stackTop = nullptr; stackSize = 0; }
     ~linkedStack();
     bool empty() const { return stackSize == 0; }
     int size() const { return stackSize; }
@@ -39,7 +39,7 @@ linkedStack<T>::~linkedStack()
 template <class T>
 T& linkedStack<T>::top()
 {
-    if (size == 0)
+    if (stackSize == 0)
     {
         throw illegalParameterValue("Õ»Îª¿Õ");
     }
@@ -48,7 +48,7 @@ T& linkedStack<T>::top()
 template <class T>
 void linkedStack<T>::pop()
 {
-    chainNode* temp = stackTop->next;
+    chainNode<T>* temp = stackTop->next;
     delete stackTop;
     stackTop = temp;
     stackSize--;
@@ -62,3 +62,4 @@ void linkedStack<T>::push(const T& theElement)
     stackTop = newNode;
     stackSize++;
 }
+void printMatchedPairs(string expr);
