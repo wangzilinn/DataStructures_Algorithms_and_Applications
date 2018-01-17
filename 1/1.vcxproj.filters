@@ -45,6 +45,9 @@
     <ClInclude Include="7.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="8.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -69,6 +72,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="7.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="8.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
