@@ -69,4 +69,16 @@ void towerOfHanoi(int n, int from, int to, int auxiliary);
 void towerOfHanoi(int n);
 static void moveAndShow(int n, int from, int to, int auxiliary);//只是给上面的汉诺塔函数调用
 //列车重排
-bool railRoad(int inputOrder[], int theNumberOfCars, int theNumberOfTracks);
+class CarSort
+{
+private:
+    linkedStack<int> *track;
+    int *inputOrder;
+    int numberOfCars;
+    int numberOfTracks;//缓冲轨道数目
+    int smallestCarTrack;//停靠着最小编号车厢的缓冲轨道
+    int nextCarToOutput;//下一个要被移出的车辆
+public:
+    CarSort(int theInputOrder[], const int theNumberOfCars, const int theNumberOfTracks);
+    bool startSort();
+};

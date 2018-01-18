@@ -57,16 +57,77 @@ void moveAndShow(int n, int from, int to, int auxiliary)
     moveAndShow(n - 1, auxiliary, to, from);
 }
 //列车重排：
-linkedStack<int> *track;
-int numberOfCars;
-int numberOfTracks;//缓冲轨道数目
-int smallestCar;//在缓冲区中编号最小的车厢
-int itsTrack;//停靠着最小编号车厢的缓冲轨道
-bool railRoad(int inputOrder[], int theNumberOfCars, int theNumberOfTracks)
+CarSort::CarSort(int theInputOrder[], const int theNumberOfCars, const int theNumberOfTracks)
 {
+    numberOfCars = theNumberOfCars;
+    numberOfTracks = theNumberOfTracks;//缓冲轨道数目
     track = new linkedStack<int>[theNumberOfTracks];
-    for (int i = 0; i < theNumberOfCars; i++)
+    inputOrder = theInputOrder;
+    nextCarToOutput = 1;
+    smallestCarTrack = -1;
+}
+bool CarSort::startSort()
+{
+    for (int i = 0; i < numberOfCars; i++)
     {
+        if (inputOrder[i] == nextCarToOutput)
+        {
+            cout << "直接移动" << inputOrder[i] << "号车厢到出轨道" << endl;
+            nextCarToOutput++;
+            //从缓冲区中找有没有可以直接移出的车厢：
+            bool hasNextLoop = true;
+            while (hasNextLoop)
+            {
+                hasNextLoop = false;
+                for (int j = 0; j < numberOfTracks; j++)
+                {
+                    if ((!track[j].empty()) && (track[j].top() == nextCarToOutput))
+                    {
+                        cout << "移动缓冲区" << j << "中的" << track[j].top() << "号车厢到出轨道" << endl;
+                        track[j].pop();
+                        nextCarToOutput++;
+                        hasNextLoop = true;//如果本次遍历发现有能进入出轨道的，则再次进行遍历
+                    }
+                }
+            }
 
+        }
+        else
+        {
+            int minDeviation = numberOfCars;
+            smallestCarTrack = -1;
+            //寻找满足条件的最佳缓冲区
+            for (int j = 0; j < numberOfTracks; j++)
+            {
+                if((!track[j].empty()) && (inputOrder[i] < track[j].top()))
+                {
+                    int deviation = track[j].top() - inputOrder[i];
+                    if (deviation <= minDeviation)
+                    {
+                        minDeviation = deviation;
+                        smallestCarTrack = j;
+                    }
+                }
+            }
+            if (smallestCarTrack == -1)//如果非空的栈没有合适的位置，就看看有没有空栈可以放
+            {
+                for (int j = 0; j < numberOfTracks; j++)
+                {
+                    if (track[j].empty())
+                    {
+                        smallestCarTrack = j;
+                        break;
+                    }
+                }               
+            }
+            if (smallestCarTrack == -1)
+            {
+                cout << "无法放入缓冲区" << endl;
+            }
+            //将车厢放入找到的缓冲区：
+            track[smallestCarTrack].push(inputOrder[i]);
+            cout << "把" << inputOrder[i] << "号车厢放入" << smallestCarTrack << "号缓冲区" << endl;
+        }
     }
+    return true;
 }
