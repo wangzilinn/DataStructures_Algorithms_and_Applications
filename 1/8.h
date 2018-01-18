@@ -62,4 +62,11 @@ void linkedStack<T>::push(const T& theElement)
     stackTop = newNode;
     stackSize++;
 }
+//匹配括号
 void printMatchedPairs(string expr);
+//汉诺塔
+void towerOfHanoi(int n, int from, int to, int auxiliary);
+void towerOfHanoi(int n);
+static void moveAndShow(int n, int from, int to, int auxiliary);//只是给上面的汉诺塔函数调用
+//列车重排
+bool railRoad(int inputOrder[], int theNumberOfCars, int theNumberOfTracks);
