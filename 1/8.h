@@ -25,6 +25,7 @@ public:
     T& top();
     void pop();
     void push(const T& theElement);
+    bool has(const T& theElement) const;
 };
 template <class T>
 linkedStack<T>::~linkedStack()
@@ -62,6 +63,18 @@ void linkedStack<T>::push(const T& theElement)
     stackTop = newNode;
     stackSize++;
 }
+template <class T>
+bool linkedStack<T>::has(const T& theElement) const
+{
+    chainNode<T>* pointer = stackTop;
+    while (pointer != nullptr)
+    {
+        if (pointer->element == theElement)
+            return true;
+        pointer = pointer->next;
+    }
+    return false;
+}
 //匹配括号
 void printMatchedPairs(string expr);
 //汉诺塔
@@ -80,5 +93,20 @@ private:
     int nextCarToOutput;//下一个要被移出的车辆
 public:
     CarSort(int theInputOrder[], const int theNumberOfCars, const int theNumberOfTracks);
+    ~CarSort();
     bool startSort();
+};
+//离线等价类
+class OfflineEquirlenceClass
+{
+private:
+    int n;//元素数目
+    int numberOfRelationships;//关系数目
+    linkedStack<int>* stack;
+    linkedStack<int>* numberList;
+    bool *alreadyOut;
+public:
+    OfflineEquirlenceClass(const int n, const int theNumberOfRelationships, int** theRelationshipList);
+    ~OfflineEquirlenceClass();
+    void solve();
 };

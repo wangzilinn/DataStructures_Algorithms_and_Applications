@@ -66,6 +66,10 @@ CarSort::CarSort(int theInputOrder[], const int theNumberOfCars, const int theNu
     nextCarToOutput = 1;
     smallestCarTrack = -1;
 }
+CarSort::~CarSort()
+{
+    delete[] track;
+}
 bool CarSort::startSort()
 {
     for (int i = 0; i < numberOfCars; i++)
@@ -130,4 +134,52 @@ bool CarSort::startSort()
         }
     }
     return true;
+}
+//离线等价类
+OfflineEquirlenceClass::OfflineEquirlenceClass(const int n, const int theNumberOfRelationships, int** theRelationshipList)
+{
+    (*this).n = n;
+    numberList = new linkedStack<int>[n + 1];//每个元素对应的表
+    alreadyOut = new bool[n + 1];
+    fill(alreadyOut, alreadyOut + (n + 1), false);//初始化是否已经输出数组
+    numberOfRelationships = theNumberOfRelationships;
+    stack = new linkedStack<int>;//用于数据暂存的栈
+    //建立初始状态的表：
+    for (int i = 0; i < numberOfRelationships; i++)
+    {
+        numberList[theRelationshipList[i][1]].push(theRelationshipList[i][0]);
+    }
+}
+OfflineEquirlenceClass::~OfflineEquirlenceClass()
+{
+    delete stack;
+    delete[] numberList;
+    delete[] alreadyOut;
+}
+void OfflineEquirlenceClass::solve()
+{
+    int seed = 1;
+    for (int i = 1; i <= n; i++)
+    {
+        if (!alreadyOut[i])
+        {
+            cout << i;
+            stack->push(i);
+            while (!stack->empty())
+            {
+                int j = stack->top();
+                stack->pop();
+                while (!numberList[j].empty())
+                {
+                    if (!alreadyOut[numberList[j].top()])
+                    {
+                        cout << numberList[j].top() << " ";
+                        stack->push(numberList[j].top());
+                    }
+                    numberList[j].pop();
+                }               
+            }
+        }
+        cout << endl;
+    }
 }
