@@ -172,6 +172,8 @@ void OfflineEquirlenceClass::solve()
                 while (!numberList[j].empty())
                 {
                     if (!alreadyOut[numberList[j].top()])
+                        //每个元素入栈前一定被输出过，而入栈的元素会带出来其对应的线性表其他元素
+                        //如果带出来的元素已经被输出过，说明已经入过栈，就不需要再入栈了。
                     {
                         cout << numberList[j].top() << " ";
                         stack->push(numberList[j].top());
