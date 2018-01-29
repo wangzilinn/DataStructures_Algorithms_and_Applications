@@ -283,3 +283,4 @@ void chain<T>::binSort(unsigned int from, unsigned int to)
     delete[] bottom;
     delete[] top;
 }
+void testAt6();

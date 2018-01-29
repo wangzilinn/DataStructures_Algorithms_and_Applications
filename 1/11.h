@@ -17,7 +17,7 @@ class binaryTree
 public:
 	virtual ~binaryTree() {}
 	virtual bool empty() const = 0;
-	virtual int size() const = 0;
+	virtual int height() const = 0;
 	virtual void preOrder(void(*)(T*)) = 0;
 	virtual void inOrder(void(*)(T*)) = 0;
 	virtual void postOrder(void(*)(T*)) = 0;
@@ -35,30 +35,30 @@ private:
 	static void inOrder(binaryTreeNode<T>* t);
 	static void postOrder(binaryTreeNode<T> * t);
 	static void levelOrder(binaryTreeNode<T> *t);
-	static void dispose(binaryTreeNode<T> * t) { delete t };
+	static void dispose(binaryTreeNode<T> * t) { delete t; };
 	static int height(binaryTreeNode<T> *t);
 public:
 	linkedBinaryTree() : root(nullptr), treeSize(0) {}
-	~linkedBinaryTree() { erase(); }
+	~linkedBinaryTree() { earse(); }
 	bool empty() const { return treeSize == 0; }
 	void preOrder(void(*theVisit)(binaryTreeNode<T>*))
 	{
-		visit = theVisit;
+		linkedBinaryTree<T>::visit = theVisit;
 		preOrder(root);
 	}
 	void inOrder(void(*theVisit)(binaryTreeNode<T>*))
 	{
-		visit = theVisit;
+		linkedBinaryTree<T>::visit = theVisit;
 		inOrder(root);
 	}
 	void postOrder(void(*theVisit)(binaryTreeNode<T>*))
 	{
-		visit = theVisit;
+		linkedBinaryTree<T>::visit = theVisit;
 		postOrder(root);
 	}
-	void levelOrder(void(*theVisit)(binaryTreeNode<T> *))
+	void levelOrder(void(*theVisit)(binaryTreeNode<T>*))
 	{
-		visit = theVisit;
+		linkedBinaryTree<T>::visit = theVisit;
 		levelOrder(root);
 	}
 	void earse()
@@ -67,7 +67,7 @@ public:
 		root = nullptr;
 		treeSize = 0;
 	}
-	int height() { return height(root); }
+	int height() const { return height(root); }
 };
 template<class T>
 void linkedBinaryTree<T>::preOrder(binaryTreeNode<T> *t)
@@ -138,3 +138,5 @@ int linkedBinaryTree<T>::height(binaryTreeNode<T>* t)
 		return 0;
 	}
 }
+void(*linkedBinaryTree<int>::visit)(binaryTreeNode<int>*);//静态成员的初始化
+void TestAt11();
