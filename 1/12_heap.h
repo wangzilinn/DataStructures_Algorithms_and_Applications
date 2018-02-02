@@ -1,9 +1,10 @@
 #pragma once
 void testAt12();
+//为了减少代码，假设数组长度总是足够的
 template<class T>
 class completeBinaryTree:public binaryTree<T>//这里注意模板类型的继承关系
 {
-private:
+protected:
 	T * root;
 	int n;
 	void(*visit)(T*);
@@ -85,14 +86,9 @@ class maxHeap:public completeBinaryTree<T>//继承之前没有T
 private:
 	void initialize();
 public:
-	maxHeap(T* theRoot, int theN)
+	maxHeap(T* theRoot, int theN):completeBinaryTree<T>(theRoot, theN)
 	{
-		completeBinaryTree<T>(theRoot, theN);
 		initialize();
-	}
-	~maxHeap()
-	{
-		~completeBinaryTree<T>();
 	}
 	void push(const T& theElement);
 	T pop();//删除并返回最大元素
@@ -105,10 +101,42 @@ void maxHeap<T>::initialize()
 template <class T>
 void maxHeap<T>::push(const T& theElement)
 {
-
+	//先插入数组末尾，然后进行起泡操作
+	root[++n] = theElement;
+	int pointer = n;
+	while (pointer != 1)
+	{
+		//找到他的父亲
+		int father = pointer / 2;
+		if (root[father] < root[pointer])
+		{
+			swap(root[father], root[pointer]);
+		}
+		pointer = father;
+	}
 }
 template <class T>
 T maxHeap<T>::pop()
 {
-
+	T toReturn = root[1];//取出根元素准备返回
+	T compare = root[n--];
+	int pointer = 1;
+	do
+	{
+		root[pointer] = compare;
+		int lChild = pointer * 2;
+		int rChild = pointer * 2 + 1;
+		if (root[lChild] >= root[rChild])//左孩子更大
+		{
+			swap(root[lChild], root[pointer]);
+			pointer = lChild;
+		}
+		else//右孩子更大
+		{
+			swap(root[rChild], root[pointer]);
+			pointer = rChild;
+		}
+	} 
+	while (pointer < n);
+	return toReturn;
 }
