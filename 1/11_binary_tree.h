@@ -8,7 +8,7 @@ struct binaryTreeNode
 	binaryTreeNode(const T theElement) :element(theElement), leftChild(nullptr), rightChild(nullptr) {}
 	binaryTreeNode() :leftChild(nullptr), rightChild(nullptr) {}
 	binaryTreeNode(const T& theElement, binaryTreeNode* theLeftChild, binaryTreeNode* theRightChild)
-		:element(theElement), leftChild(theLeftChild), rightChild(theLeftChild) {}
+		:element(theElement), leftChild(theLeftChild), rightChild(theRightChild) {}
 };
 //二叉树抽象类：
 template <class T>
@@ -25,22 +25,27 @@ public:
 };
 //链表描述的二叉树：
 template<class T>
-class linkedBinaryTree :public binaryTree<binaryTreeNode<T>>
+class linkedBinaryTree :public binaryTree<binaryTreeNode<T>>//这里注意模板类型的继承关系
 {
 private:
 	binaryTreeNode<T> * root;
-	int treeSize;
-	static void (*visit)(binaryTreeNode<T>*);//静态类的static只需要再类内写，在外部不需要写
+	int treeHeight;
+	static void (*visit)(binaryTreeNode<T>*);//静态类的static关键字只需要再类内写，在外部不需要写
 	static void preOrder(binaryTreeNode<T>* t);
 	static void inOrder(binaryTreeNode<T>* t);
 	static void postOrder(binaryTreeNode<T> * t);
 	static void levelOrder(binaryTreeNode<T> *t);
-	static void dispose(binaryTreeNode<T> * t) { delete t; };
+	static void dispose(binaryTreeNode<T> * t) {};
 	static int height(binaryTreeNode<T> *t);
 public:
-	linkedBinaryTree() : root(nullptr), treeSize(0) {}
+	linkedBinaryTree() : root(nullptr), treeHeight(0) {}
+	linkedBinaryTree(binaryTreeNode<T> * theRoot)
+	{
+		root = theRoot;
+		treeHeight = height(root);
+	}
 	~linkedBinaryTree() { earse(); }
-	bool empty() const { return treeSize == 0; }
+	bool empty() const { return treeHeight == 0; }
 	void preOrder(void(*theVisit)(binaryTreeNode<T>*))
 	{
 		linkedBinaryTree<T>::visit = theVisit;
@@ -65,7 +70,7 @@ public:
 	{
 		postOrder(dispose);//使用后续遍历删除节点，不用保存节点信息
 		root = nullptr;
-		treeSize = 0;
+		treeHeight = 0;
 	}
 	int height() const { return height(root); }
 };
@@ -138,5 +143,5 @@ int linkedBinaryTree<T>::height(binaryTreeNode<T>* t)
 		return 0;
 	}
 }
-void(*linkedBinaryTree<int>::visit)(binaryTreeNode<int>*);//静态成员的初始化
+void(*linkedBinaryTree<int>::visit)(binaryTreeNode<int>*) = nullptr;//静态成员的初始化
 void TestAt11();

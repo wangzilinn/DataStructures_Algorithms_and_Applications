@@ -24,37 +24,40 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="1.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="public.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="2.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="3.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="5.h">
+    <ClInclude Include="12_heap.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="6.h">
+    <ClInclude Include="11_binary_tree.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="7.h">
+    <ClInclude Include="10_hash_table.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="8.h">
+    <ClInclude Include="9_quene.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="9.h">
+    <ClInclude Include="8_stack.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="10.h">
+    <ClInclude Include="7_matrix.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="11.h">
+    <ClInclude Include="5_liner_list_by_array.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="6_liner_list_by_chain.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="2_sort.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="1_basic.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -62,37 +65,40 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="1.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="public.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="2.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="3.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="5.cpp">
+    <ClCompile Include="12_heap.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="6.cpp">
+    <ClCompile Include="11_binary_tree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="7.cpp">
+    <ClCompile Include="10_hash_table.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="8.cpp">
+    <ClCompile Include="9_quene.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="9.cpp">
+    <ClCompile Include="8_stack.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="10.cpp">
+    <ClCompile Include="7_matrix.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="11.cpp">
+    <ClCompile Include="6_liner_list_by_chain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="5_liner_list_by_array.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="1_baisc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="2_sort.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
