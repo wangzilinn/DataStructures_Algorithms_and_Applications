@@ -96,7 +96,40 @@ public:
 template <class T>
 void maxHeap<T>::initialize()
 {
-
+	//从第一个有孩子的节点开始操作
+	int pointer = n / 2;
+	while (pointer != 0)
+	{
+		int childRoot = pointer;
+		do
+		{
+			int leftChild = childRoot * 2;
+			int rightChild = childRoot * 2 + 1;
+			if (root[leftChild] >= root[rightChild])
+			{
+				if (root[childRoot] < root[leftChild])
+				{
+					swap(root[childRoot], root[leftChild]);
+					childRoot = leftChild;
+				}
+				else
+					break;
+					
+			}
+			else
+			{
+				if (root[childRoot] < root[rightChild])
+				{
+					swap(root[childRoot], root[rightChild]);
+					childRoot = rightChild;
+				}
+				else
+					break;
+			}
+		} 
+		while (childRoot < n);
+		pointer--;
+	}
 }
 template <class T>
 void maxHeap<T>::push(const T& theElement)

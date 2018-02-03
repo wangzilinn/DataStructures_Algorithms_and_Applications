@@ -7,14 +7,9 @@ static void display(int * t)
 
 void testAt12()
 {
-	int n = 5;
+	int n = 10;
 	int* root = new int[2 * n]
-	{ 0,20,15,2,14,10 };//Ä¬ÈÏ³õÊ¼»¯
+	{ 0,20,12,35,15,10,80,30,17,2,1 };
 	maxHeap<int> testHeap(root, n);
-	//testHeap.push(5);
-	testHeap.push(23);
-	//testHeap.levelOrder(display);
-	testHeap.pop();
-	testHeap.pop();
 	testHeap.levelOrder(display);
 }
