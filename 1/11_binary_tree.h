@@ -27,7 +27,7 @@ public:
 template<class T>
 class linkedBinaryTree :public binaryTree<binaryTreeNode<T>>//这里注意模板类型的继承关系
 {
-private:
+protected:
 	binaryTreeNode<T> * root;
 	int treeHeight;
 	static void (*visit)(binaryTreeNode<T>*);//静态类的static关键字只需要再类内写，在外部不需要写
@@ -144,4 +144,5 @@ int linkedBinaryTree<T>::height(binaryTreeNode<T>* t)
 	}
 }
 void(*linkedBinaryTree<int>::visit)(binaryTreeNode<int>*) = nullptr;//静态成员的初始化
+void(*linkedBinaryTree<pair<int, string>>::visit)(binaryTreeNode<pair<int, string>>*) = nullptr;
 void TestAt11();
