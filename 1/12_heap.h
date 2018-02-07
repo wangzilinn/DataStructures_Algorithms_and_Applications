@@ -105,23 +105,35 @@ void maxHeap<T>::initialize()
 		{
 			int leftChild = childRoot * 2;
 			int rightChild = childRoot * 2 + 1;
-			if (root[leftChild] >= root[rightChild])
+			if (rightChild <= n)
+			{
+				if (root[leftChild] >= root[rightChild])
+				{
+					if (root[childRoot] < root[leftChild])
+					{
+						swap(root[childRoot], root[leftChild]);
+						childRoot = leftChild;
+					}
+					else
+						break;
+				}
+				else
+				{
+					if (root[childRoot] < root[rightChild])
+					{
+						swap(root[childRoot], root[rightChild]);
+						childRoot = rightChild;
+					}
+					else
+						break;
+				}
+			}
+			else
 			{
 				if (root[childRoot] < root[leftChild])
 				{
 					swap(root[childRoot], root[leftChild]);
 					childRoot = leftChild;
-				}
-				else
-					break;
-					
-			}
-			else
-			{
-				if (root[childRoot] < root[rightChild])
-				{
-					swap(root[childRoot], root[rightChild]);
-					childRoot = rightChild;
 				}
 				else
 					break;

@@ -1,9 +1,5 @@
 #include "stdafx.h"
-template <class K, class V>
-void output11(binaryTreeNode<pair<K, V>>* theNodePointer)
-{
-	cout << theNodePointer->element.first << " : " << theNodePointer->element.second << "  ";
-}
+
 void testAt14()
 {
 	//¹¹Ôì¶þ²æËÑË÷Ê÷
@@ -19,5 +15,7 @@ void testAt14()
 	binaryTreeNode<pair<int, string>> b(make_pair(5, "b"), &d, nullptr);
 	binaryTreeNode<pair<int, string>> a(make_pair(30, "a"), &b, &c);
 	BinarySearchTree<int, string> testTree(&a);
-	testTree.ascend();
+	testTree.insert(make_pair(1, "test"));
+	testTree.insert(make_pair(37, "test2"));
+	cout << testTree.find(2);
 }
