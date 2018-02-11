@@ -8,10 +8,10 @@ private:
 public:
 	BinarySearchTree(binaryTreeNode<pair<K, V>>* theRoot) :linkedBinaryTree<pair<K, V>>(theRoot) {}
 	BinarySearchTree() :linkedBinaryTree<pair<K, V>>() {}
-	V find(const K& theKey)const;
-	void insert(const pair<K, V> thePair);
+	V find(const K& theKey)const;//complete
+	void insert(const pair<K, V> thePair);//complete
 	void earse(const K& theKey);
-	void ascend() { linkedBinaryTree<pair<K, V>>::inOrder(output); }
+	void ascend() { linkedBinaryTree<pair<K, V>>::inOrder(output); }//complete
 };
 template <class K, class V>
 binaryTreeNode<pair<K, V>>* BinarySearchTree<K, V>::search(const K& theKey)const
@@ -85,7 +85,7 @@ void BinarySearchTree<K, V>::earse(const K& theKey)
 	{
 		lastPointer->rightChild = pointer->rightChild;
 	}
-	else//被删除的节点左右子树都不为空,令其左子树最大节点替换该节点
+	else//被删除的节点左右子树都不为空,令其左子树????最大节点替换该节点
 	{
 		//查找左子树最大节点：
 		binaryTreeNode<pair<K, V>> searchPointer = pointer->leftChild;
@@ -99,12 +99,32 @@ void BinarySearchTree<K, V>::earse(const K& theKey)
 		{
 			if (lastPointer->leftChild.first == theKey)
 			{
-
+				lastPointer->leftChild = searchPointer;
+				if (searchPointer->leftChild != nullptr)//被选中的最大子节点有左子树时
+				{//比较该左子树和被删除节点左子树哪个小，确定左右子树的分配
+					if (searchPointer->leftChild.first >= pointer->leftChild.first)
+					{
+						searchPointer->rightChild = searchPointer->leftChild;
+						searchPointer->leftChild = pointer->leftChild;
+					}
+					else
+					{
+						searchPointer->rightChild = pointer->leftChild;
+					}
+				}
+				else
+					searchPointer->leftChild = pointer->leftChild;//当没有左子树时，被选中节点左子树直接指向被删除节点左子树
 			}
 			else
 			{
-				lastPointer->rightChild = pointer->leftChild;
-				pointer->leftChild->rightChild
+				lastPointer->rightChild = searchPointer;
+				if (searchPointer->leftChild != nullptr)
+				{
+					if (searchPointer->leftChild.first >= pointer->leftChild.first)
+					{
+
+					}
+				}
 			}
 		}
 	}
