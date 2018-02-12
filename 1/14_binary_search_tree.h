@@ -9,7 +9,7 @@ public:
 	BinarySearchTree(binaryTreeNode<pair<K, V>>* theRoot) :linkedBinaryTree<pair<K, V>>(theRoot) {}
 	BinarySearchTree() :linkedBinaryTree<pair<K, V>>() {}
 	V find(const K& theKey)const;//complete
-	void insert(const pair<K, V> thePair);//complete
+	void insert(const pair<K, V> &thePair);//complete
 	void earse(const K& theKey);//comlete
 	void ascend() { linkedBinaryTree<pair<K, V>>::inOrder(output); }//complete
 };
@@ -124,7 +124,7 @@ void BinarySearchTree<K, V>::earse(const K& theKey)
 	}
 }
 template <class K, class V>
-void BinarySearchTree<K, V>::insert(const pair<K, V> thePair)
+void BinarySearchTree<K, V>::insert(const pair<K, V> &thePair)
 {
 	binaryTreeNode<pair<K, V>>* newOne = new binaryTreeNode<pair<K, V>>(thePair);
 	binaryTreeNode<pair<K, V>>* pointer = root;

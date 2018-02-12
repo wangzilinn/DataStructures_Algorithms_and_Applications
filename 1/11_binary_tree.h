@@ -3,6 +3,7 @@ template<class T>
 struct binaryTreeNode
 {
 	T element;
+	int nodeData;//Õÿ’π÷Æ”√
 	binaryTreeNode* leftChild;
 	binaryTreeNode* rightChild;
 	binaryTreeNode(const T theElement) :element(theElement), leftChild(nullptr), rightChild(nullptr) {}
