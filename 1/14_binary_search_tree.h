@@ -10,7 +10,7 @@ public:
 	BinarySearchTree() :linkedBinaryTree<pair<K, V>>() {}
 	V find(const K& theKey)const;//complete
 	void insert(const pair<K, V> thePair);//complete
-	void earse(const K& theKey);
+	void earse(const K& theKey);//comlete
 	void ascend() { linkedBinaryTree<pair<K, V>>::inOrder(output); }//complete
 };
 template <class K, class V>
@@ -50,7 +50,7 @@ void BinarySearchTree<K, V>::earse(const K& theKey)
 {
 	binaryTreeNode<pair<K, V>>* pointer = root;
 	binaryTreeNode<pair<K, V>>* lastPointer = nullptr;
-	while (pointer != nullptr)
+	while (pointer != nullptr)//查找要删除的节点和要删除节点的父亲
 	{
 		if (pointer->element.first == theKey)
 		{
@@ -70,63 +70,57 @@ void BinarySearchTree<K, V>::earse(const K& theKey)
 	if (pointer == nullptr)
 		return;//没找到元素
 	//判断要删除节点的三种情况：
-	if (pointer->rightChild == nullptr && pointer->leftChild == nullptr)//要删除的节点是叶子结点
+	//1.要删除的节点是叶子结点
+	if (pointer->rightChild == nullptr && pointer->leftChild == nullptr)
 	{
-		if (lastPointer->leftChild.first == theKey)
+		if (lastPointer->leftChild->element.first == theKey)
 			lastPointer->leftChild = nullptr;
 		else
 			lastPointer->rightChild = nullptr;
 	}
-	else if (pointer->leftChild != nullptr && pointer->rightChild == nullptr)//要删除的节点右子树为空
+	//2.1要删除的节点右子树为空
+	else if (pointer->leftChild != nullptr && pointer->rightChild == nullptr)
 	{
 		lastPointer->leftChild = pointer->leftChild;
 	}
-	else if (pointer->rightChild != nullptr && pointer->leftChild == nullptr)//要删除的节点左子树为空
+	//2.2要删除节点的左子树为空
+	else if (pointer->rightChild != nullptr && pointer->leftChild == nullptr)
 	{
 		lastPointer->rightChild = pointer->rightChild;
 	}
-	else//被删除的节点左右子树都不为空,令其左子树????最大节点替换该节点
+	//3.要删除节点的左右子树都不空
+	else//令其左子树最大节点替换该节点
 	{
 		//查找左子树最大节点：
-		binaryTreeNode<pair<K, V>> searchPointer = pointer->leftChild;
-		binaryTreeNode<pair<K, V>> leftMaxChildsFather = pointer;//左子树最大节点的父亲
-		while (searchPointer->rightChild != nullptr)
+		binaryTreeNode<pair<K, V>>* leftSubtreeMaxNode = pointer->leftChild;//左子树最大节点
+		binaryTreeNode<pair<K, V>>* leftSubtreeMaxNodeFather = pointer;//左子树最大节点的父亲
+		while (leftSubtreeMaxNode->rightChild != nullptr)
 		{
-			leftMaxChildsFather = searchPointer;
-			searchPointer = searchPointer->rightChild;//不断向右查找直到为nullptr
+			leftSubtreeMaxNodeFather = leftSubtreeMaxNode;
+			leftSubtreeMaxNode = leftSubtreeMaxNode->rightChild;//不断向右查找直到为nullptr
 		}
-		if (lastPointer != nullptr)//当删除的不是根节点时：
+		//将找到的节点复制到删除节点处
+		pointer->element = leftSubtreeMaxNode->element;
+		//删除左子树最大节点(删除指向该节点的指针,如果该节点有左子树,则子树继承原来的位置)
+		//之所以没有直接删除leftSubtreeMaxNodeFather的右节点是因为存在"左子树最大节点就是其左子树根"的情况,
+		//该情况下,leftSubtreeMaxNode是leftSubtreeMaxNodeFather的左节点
+		if (leftSubtreeMaxNodeFather->leftChild->element == leftSubtreeMaxNode->element)
 		{
-			if (lastPointer->leftChild.first == theKey)
-			{
-				lastPointer->leftChild = searchPointer;
-				if (searchPointer->leftChild != nullptr)//被选中的最大子节点有左子树时
-				{//比较该左子树和被删除节点左子树哪个小，确定左右子树的分配
-					if (searchPointer->leftChild.first >= pointer->leftChild.first)
-					{
-						searchPointer->rightChild = searchPointer->leftChild;
-						searchPointer->leftChild = pointer->leftChild;
-					}
-					else
-					{
-						searchPointer->rightChild = pointer->leftChild;
-					}
-				}
-				else
-					searchPointer->leftChild = pointer->leftChild;//当没有左子树时，被选中节点左子树直接指向被删除节点左子树
-			}
+			if (leftSubtreeMaxNode->leftChild != nullptr)
+				leftSubtreeMaxNodeFather->leftChild = leftSubtreeMaxNode->leftChild;
 			else
-			{
-				lastPointer->rightChild = searchPointer;
-				if (searchPointer->leftChild != nullptr)
-				{
-					if (searchPointer->leftChild.first >= pointer->leftChild.first)
-					{
-
-					}
-				}
-			}
+				leftSubtreeMaxNodeFather->leftChild = nullptr;
 		}
+		else
+		{
+			if (leftSubtreeMaxNode->leftChild != nullptr)
+				leftSubtreeMaxNodeFather->rightChild = leftSubtreeMaxNode->leftChild;
+			else
+				leftSubtreeMaxNodeFather->rightChild = nullptr;
+		}
+		//如果被选中的最大子节点有左子树,由于被找到的节点要么没有孩子,要么只有左孩子
+		//所以让被找到的左子树的最大节点的父亲指向被找到的左子树的最大节点的左孩子
+		
 	}
 }
 template <class K, class V>
