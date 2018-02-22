@@ -8,4 +8,5 @@ void testAt15()
 	binaryTreeNode<pair<int, string>> c(make_pair(25, "c"), nullptr, &f);
 	binaryTreeNode<pair<int, string>> a(make_pair(20, "a"), &b, &c);
 	BalanceBinarySearchTree<int, string> testTree(&a);
+	testTree.ascend();
 }

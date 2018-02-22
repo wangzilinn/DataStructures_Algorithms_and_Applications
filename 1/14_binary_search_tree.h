@@ -134,6 +134,7 @@ void BinarySearchTree<K, V>::insert(const pair<K, V> &thePair)
 		if (newOne->element.first == pointer->element.first)
 		{
 			pointer->element.second = newOne->element.second;
+			delete newOne;
 			return;
 		}
 		else if (newOne->element.first >= pointer->element.first)

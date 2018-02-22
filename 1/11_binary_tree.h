@@ -4,6 +4,7 @@ struct binaryTreeNode
 {
 	T element;
 	int nodeData;//拓展之用
+	int height;//树高
 	binaryTreeNode* leftChild;
 	binaryTreeNode* rightChild;
 	binaryTreeNode(const T theElement) :element(theElement), leftChild(nullptr), rightChild(nullptr) {}
@@ -137,7 +138,8 @@ int linkedBinaryTree<T>::height(binaryTreeNode<T>* t)
 	{
 		int hl = height(t->leftChild);
 		int hr = height(t->rightChild);
-		return hl > hr ? ++hl : ++hr;
+		t->height = (hl > hr ? ++hl : ++hr);
+		return t->height;
 	}
 	else
 	{
