@@ -32,10 +32,18 @@ public:
 template <class K, class V>
 void BalanceBinarySearchTree<K, V>::insert(const pair<K, V>& thePair)
 {
+	enum
+	{
+		left,
+		right
+	}direction;
 	binaryTreeNode<pair<K, V>>* pointer = root;
-	binaryTreeNode<pair<K, V>>* supPointer;//查找指针的父亲
+	binaryTreeNode<pair<K, V>>* supPointer = nullptr;//查找指针的父亲
+	binaryTreeNode<pair<K, V>>* pointerA = nullptr;//指向平衡因子为1或-1的节点
+	binaryTreeNode<pair<K, V>>* supPointerA = nullptr;//指向节点A的父亲
 	binaryTreeNode<pair<K, V>>* newOne = new binaryTreeNode<pair<K, V>>(thePair);
-	CircularArrayQuene<binaryTreeNode<pair<K, V>>*> quene;//记录从根到所找到节点的路径
+	linkedStack<binaryTreeNode<pair<K, V>>*> stack;//记录从根到所找到节点的路径
+	//插入节点
 	while (pointer != nullptr)
 	{
 		supPointer = pointer;
@@ -47,22 +55,75 @@ void BalanceBinarySearchTree<K, V>::insert(const pair<K, V>& thePair)
 		}
 		else if (thePair.first > pointer->element.first)
 		{
-			quene.push(pointer);
+			stack.push(pointer);
+			if ((pointer->nodeData == 1) || (pointer->nodeData == -1))
+			{
+				supPointerA = pointerA;
+				pointerA = pointer;
+			}
 			pointer = pointer->rightChild;
 		}
 		else
 		{
-			quene.push(pointer);
+			stack.push(pointer);
+			if ((pointer->nodeData == 1) || (pointer->nodeData == -1))
+			{
+				supPointerA = pointerA;
+				pointerA = pointer;
+			}			
 			pointer = pointer->leftChild;
 		}
 	}
 	if (thePair.first >= supPointer->element.first)
+	{
 		supPointer->rightChild = newOne;
+		direction = right;
+	}
 	else
+	{
 		supPointer->leftChild = newOne;
-
-
-	//恢复平衡
+		direction = left;
+	}
+	//检查A节点是否存在:注意,此时pointerA指向的是最后一个满足条件的A
+	if (pointerA == nullptr)//节点A不存在->原来的子树高度相等->直接添加,更新树高和平衡因子
+	{
+		//更新栈中节点
+		while (!stack.empty())
+		{
+			pointer = stack.top();
+			stack.pop();
+			pointer->height++;
+			int leftHeight = 0, rightHeight = 0;
+			if (pointer->leftChild != nullptr)
+				leftHeight = pointer->leftChild->height;
+			if (pointer->rightChild != nullptr)
+				rightHeight = pointer->rightChild->height;
+			pointer->nodeData = leftHeight - rightHeight;
+		}
+	}
+	else if ((pointerA->leftChild == newOne) || (pointer->rightChild == newOne))
+	{
+		pointerA->nodeData = 0;//如果节点A直接与新插入的节点相连,那么说明新节点正好在空位上,此时更新节点A的平衡因子即可,对树高无影响
+	}
+	else//开始旋转
+	{
+		if ((pointerA->nodeData == -1) && (direction == right))
+		{
+			//RR
+		}
+		else if ((pointerA->nodeData == 1) && (direction == left))
+		{
+			//LL
+		}
+		else if ((pointer->nodeData == -1) && (direction == right))
+		{
+			//RL
+		}
+		else if ((pointer->nodeData == 1) && (direction == left))
+		{
+			//LR
+		}
+	}
 }
 template <class K, class V>
 void BalanceBinarySearchTree<K, V>::earse(const K& theKey)

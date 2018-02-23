@@ -4,13 +4,13 @@ struct binaryTreeNode
 {
 	T element;
 	int nodeData;//拓展之用
-	int height;//树高
+	int height = 1;//树高
 	binaryTreeNode* leftChild;
 	binaryTreeNode* rightChild;
-	binaryTreeNode(const T theElement) :element(theElement), leftChild(nullptr), rightChild(nullptr) {}
+	binaryTreeNode(const T theElement) :element(theElement), leftChild(nullptr), rightChild(nullptr){}
 	binaryTreeNode() :leftChild(nullptr), rightChild(nullptr) {}
 	binaryTreeNode(const T& theElement, binaryTreeNode* theLeftChild, binaryTreeNode* theRightChild)
-		:element(theElement), leftChild(theLeftChild), rightChild(theRightChild) {}
+		:element(theElement), leftChild(theLeftChild), rightChild(theRightChild){}
 };
 //二叉树抽象类：
 template <class T>

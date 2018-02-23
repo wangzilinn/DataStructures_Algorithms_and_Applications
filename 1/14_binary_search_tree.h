@@ -156,6 +156,7 @@ void BinarySearchTree<K, V>::insert(const pair<K, V> &thePair)
 	{
 		finalPointer->leftChild = newOne;
 	}
+
 }
 template <class K, class V>
 static void output(binaryTreeNode<pair<K, V>>* theNodePointer)
