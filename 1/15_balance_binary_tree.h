@@ -1,4 +1,8 @@
 #pragma once
+/*
+注意:AVL数在旋转处未写完,我认为我已经理解了AVL数的内涵,
+但是在实现方法上出现了偏差,导致过程繁杂且浪费时间,故先进行下一节.
+*/
 void testAt15();
 template <class K, class V>
 class BalanceBinarySearchTree :public BinarySearchTree<K, V>
@@ -36,7 +40,7 @@ void BalanceBinarySearchTree<K, V>::insert(const pair<K, V>& thePair)
 	{
 		left,
 		right
-	}direction;
+	}direction/*添加的节点是左子树还是右子树*/,directionA/*A是左子树还是右子树*/;
 	binaryTreeNode<pair<K, V>>* pointer = root;
 	binaryTreeNode<pair<K, V>>* supPointer = nullptr;//查找指针的父亲
 	binaryTreeNode<pair<K, V>>* pointerA = nullptr;//指向平衡因子为1或-1的节点
@@ -60,6 +64,7 @@ void BalanceBinarySearchTree<K, V>::insert(const pair<K, V>& thePair)
 			{
 				supPointerA = pointerA;
 				pointerA = pointer;
+				directionA = right;
 			}
 			pointer = pointer->rightChild;
 		}
@@ -70,6 +75,7 @@ void BalanceBinarySearchTree<K, V>::insert(const pair<K, V>& thePair)
 			{
 				supPointerA = pointerA;
 				pointerA = pointer;
+				directionA = left;
 			}			
 			pointer = pointer->leftChild;
 		}
@@ -85,6 +91,7 @@ void BalanceBinarySearchTree<K, V>::insert(const pair<K, V>& thePair)
 		direction = left;
 	}
 	//检查A节点是否存在:注意,此时pointerA指向的是最后一个满足条件的A
+	//此时栈中的存放的是从"根节点"到"添加节点的父节点"的所有节点
 	if (pointerA == nullptr)//节点A不存在->原来的子树高度相等->直接添加,更新树高和平衡因子
 	{
 		//更新栈中节点
@@ -109,6 +116,16 @@ void BalanceBinarySearchTree<K, V>::insert(const pair<K, V>& thePair)
 	{
 		if ((pointerA->nodeData == -1) && (direction == right))
 		{
+			if (directionA == right)
+			{
+				supPointerA->rightChild = supPointer;
+				supPointer->leftChild = pointerA;
+				//将pointerA变成叶子
+				pointerA->leftChild = nullptr;
+				pointerA->rightChild = nullptr;
+				pointerA->height = 1;
+				pointerA->nodeData = 0;
+			}
 			//RR
 		}
 		else if ((pointerA->nodeData == 1) && (direction == left))
