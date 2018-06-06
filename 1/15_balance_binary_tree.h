@@ -9,141 +9,191 @@ class BalanceBinarySearchTree :public BinarySearchTree<K, V>
 {
 private:
 	//之所以使用静态函数是因为调用该函数的遍历函数是静态的
-	//而静态函数只能调用静态函数
-	static void initBf(binaryTreeNode<pair<K, V>>* theRoot)
+	//而只有静态函数能调用静态函数
+	static void __InitBf(binaryTreeNode<pair<K, V>>* theRoot)//计算平衡因子
 	{
 		int leftHeight = 0,rightHeight = 0;
 		if (theRoot->leftChild != nullptr)
 			leftHeight = theRoot->leftChild->height;
 		if (theRoot->rightChild != nullptr)
 			rightHeight = theRoot->rightChild->height;
-		theRoot->nodeData = leftHeight - rightHeight;
+		theRoot->bf = leftHeight - rightHeight;
 	}
+	bool __Insert(binaryTreeNode<pair<K, V>> *theRoot, const pair<K, V> &thePair, bool *taller);
+	void __LRotate(binaryTreeNode<pair<K, V>> *theRoot);
+	void __RRotate(binaryTreeNode<pair<K, V>> *theRoot);
+	void __LeftBalance(binaryTreeNode<pair<K, V>> *theRoot);
+	void __RightBalance(binaryTreeNode<pair<K, V>> *theRoot);
 public:
 	BalanceBinarySearchTree(binaryTreeNode<pair<K, V>> *theRoot) :BinarySearchTree<K, V>(theRoot) 
 	{
 		//新建的树,为每个节点计算平衡因子	
-		postOrder(initBf);//postOrder继承自linkedBinaryTree
+		postOrder(__InitBf);//postOrder继承自linkedBinaryTree
 	}
 	BalanceBinarySearchTree() :BinarySearchTree<K, V>() {}
-	void insert(const pair<K, V>& thePair);
-	void earse(const K& theKey);
-	void ascend()
+	void Insert(const pair<K, V>& thePair)
+	{
+		bool taller = true;
+		__Insert(root, thePair, &taller);
+	}
+	void Earse(const K& theKey);
+	void Ascend()//此遍历函数没有使用继承自二叉搜索树的遍历函数，而是新建了一个，为的是更全面的显示平衡二叉树的结点信息
 	{
 		linkedBinaryTree<pair<K, V>>::inOrder(outputAVL);
 	}
 };
-template <class K, class V>
-void BalanceBinarySearchTree<K, V>::insert(const pair<K, V>& thePair)
+template <class K,class V>
+void BalanceBinarySearchTree<K, V>::__RRotate(binaryTreeNode<pair<K, V>> *theRoot)
 {
-	enum
+	binaryTreeNode<pair<K, V>>* newRoot = theRoot->rightChild;//创建一个临时指针指向新的根节点(原来根结点的右孩子）
+	theRoot->rightChild = newRoot->leftChild;//先将新根节点的左孩子托付给原来的根节点
+	newRoot->leftChild = theRoot;//再将原来的根节点左旋，作为新根节点的左孩子
+	theRoot = newRoot;//返回新的根结点
+}
+template <class K, class V>
+void BalanceBinarySearchTree<K, V>::__LRotate(binaryTreeNode<pair<K, V>> *theRoot)
+{
+	binaryTreeNode<pair<K, V>>* newRoot = theRoot->leftChild;//创建一个临时指针指向新的根结点（原来根结点的左孩子）
+	theRoot->leftChild = newRoot->rightChild;//将新的根结点的左孩子托付给原来根结点（作为原来根结点的右孩子）
+	newRoot->rightChild = theRoot;//将原来根结点右旋，作为新根节点的右孩子
+	theRoot = newRoot;//返回新的根结点
+}
+template <class K, class V>
+void BalanceBinarySearchTree<K, V>::__LeftBalance(binaryTreeNode <pair<K, V>> *theRoot)
+{
+	binaryTreeNode<pair<K, V>>* leftChild = theRoot->leftChild;
+	if (leftChild->bf = 1)//新插入结点在左孩子的左子树上(LL)
 	{
-		left,
-		right
-	}direction/*添加的节点是左子树还是右子树*/,directionA/*A是左子树还是右子树*/;
-	binaryTreeNode<pair<K, V>>* pointer = root;
-	binaryTreeNode<pair<K, V>>* supPointer = nullptr;//查找指针的父亲
-	binaryTreeNode<pair<K, V>>* pointerA = nullptr;//指向平衡因子为1或-1的节点
-	binaryTreeNode<pair<K, V>>* supPointerA = nullptr;//指向节点A的父亲
-	binaryTreeNode<pair<K, V>>* newOne = new binaryTreeNode<pair<K, V>>(thePair);
-	linkedStack<binaryTreeNode<pair<K, V>>*> stack;//记录从根到所找到节点的路径
-	//插入节点
-	while (pointer != nullptr)
-	{
-		supPointer = pointer;
-		if (pointer->element.first == thePair.first)
-		{
-			pointer->element.second = thePair.second;
-			delete newOne;
-			return;//找到了相同的元素,直接返回
-		}
-		else if (thePair.first > pointer->element.first)
-		{
-			stack.push(pointer);
-			if ((pointer->nodeData == 1) || (pointer->nodeData == -1))
-			{
-				supPointerA = pointerA;
-				pointerA = pointer;
-				directionA = right;
-			}
-			pointer = pointer->rightChild;
-		}
-		else
-		{
-			stack.push(pointer);
-			if ((pointer->nodeData == 1) || (pointer->nodeData == -1))
-			{
-				supPointerA = pointerA;
-				pointerA = pointer;
-				directionA = left;
-			}			
-			pointer = pointer->leftChild;
-		}
+		theRoot->bf = 0;//原来的根结点会作为右孩子，且是等高的
+		__RRotate(theRoot);//移动到新的根结点
+		theRoot->bf = 0;//新的根结点也是等高的
 	}
-	if (thePair.first >= supPointer->element.first)
+	else if (leftChild->bf = -1)//新插入的结点在左孩子的右子树上（LR）
 	{
-		supPointer->rightChild = newOne;
-		direction = right;
+		//以下注意：下面赋的bf值是旋转之后的最终值，但是由于尚未旋转，所以更新这些值得指针还是原来的。
+		switch (leftChild->rightChild->bf)//看图才能清楚三种情况转换完成之后的平衡状态
+		{
+		case 1://新结点在根结点的左孩子的右孩子的左边，第一次旋转后被根结点的左孩子收养
+			theRoot->bf = -1;
+			leftChild->bf = 0;
+			break;
+		case 0://新结点就是根结点的左孩子的右孩子
+			theRoot->bf = 0;
+			leftChild->bf = 0;
+			break;
+		case -1://新结点在根结点在左孩子的右孩子的右边
+			theRoot->bf = 0;
+			leftChild->bf = 1;
+			break;
+		}
+		leftChild->rightChild->bf = 0;//同上“注意”，先行把平衡因子更新
+		__LRotate(theRoot->leftChild);
+		__RRotate(theRoot);
 	}
 	else
+		throw "fuck";
+}
+template <class K, class V>
+void BalanceBinarySearchTree<K, V>::__RightBalance(binaryTreeNode<pair<K, V>> *theRoot)
+{
+	binaryTreeNode<pair<K, V>> rightChild = theRoot->rightChild;
+	if (rightChild->bf = -1)
 	{
-		supPointer->leftChild = newOne;
-		direction = left;
+		theRoot->bf = 0;
+		rightChild->bf = 0;
+		__LRotate(theRoot);
+		break;
 	}
-	//检查A节点是否存在:注意,此时pointerA指向的是最后一个满足条件的A
-	//此时栈中的存放的是从"根节点"到"添加节点的父节点"的所有节点
-	if (pointerA == nullptr)//节点A不存在->原来的子树高度相等->直接添加,更新树高和平衡因子
+	else if (rightChild->bf = 1)
 	{
-		//更新栈中节点
-		while (!stack.empty())
+		switch (rightChild->leftChild->bf)
 		{
-			pointer = stack.top();
-			stack.pop();
-			pointer->height++;
-			int leftHeight = 0, rightHeight = 0;
-			if (pointer->leftChild != nullptr)
-				leftHeight = pointer->leftChild->height;
-			if (pointer->rightChild != nullptr)
-				rightHeight = pointer->rightChild->height;
-			pointer->nodeData = leftHeight - rightHeight;
+		case -1:
+			theRoot->bf = 1;
+			rightChild->bf = 0;
+			break;
+		case 0:
+			theRoot->bf = 0;
+			rightChild->bf = 0;
+			break;
+		case 1:
+			theRoot->bf = 0;
+			rightChild->bf = -1;
+			break;
 		}
+		rightChild->leftChild->bf = 0;
+		__RRotate(theRoot->rightChild);
+		__LRotate(theRoot);
 	}
-	else if ((pointerA->leftChild == newOne) || (pointer->rightChild == newOne))
+	else
+		throw "fuck"
+}
+template <class K, class V>
+bool BalanceBinarySearchTree<K, V>::__Insert(binaryTreeNode<pair<K, V>> *theRoot, const pair<K, V> &thePair, bool *taller)
+{
+	if (theRoot == nullptr)//递归到最后了，插入节点
 	{
-		pointerA->nodeData = 0;//如果节点A直接与新插入的节点相连,那么说明新节点正好在空位上,此时更新节点A的平衡因子即可,对树高无影响
+		theRoot = new binaryTreeNode(thePair);
+		theRoot->bf = 0;
+		*taller = true;
 	}
-	else//开始旋转
+	else//开始进行比较
 	{
-		if ((pointerA->nodeData == -1) && (direction == right))
+		if (thePair.first == theRoot->element.first)
 		{
-			if (directionA == right)
+			*taller = false;
+			return false;
+		}
+		if (thePair.first < theRoot->element.first)//要插入的小于当前结点
+		{
+			//将thePai向theRoot的左子树中插入
+			if (__Insert(theRoot->leftChild, thePair, taller) == false)//重新调用该函数，把根结点变为其左结点
+				return false;
+			if (*taller == true)//如果插入之后左子树长高
 			{
-				supPointerA->rightChild = supPointer;
-				supPointer->leftChild = pointerA;
-				//将pointerA变成叶子
-				pointerA->leftChild = nullptr;
-				pointerA->rightChild = nullptr;
-				pointerA->height = 1;
-				pointerA->nodeData = 0;
+				switch (theRoot->bf)
+				{
+				case 1://原本左边就高，又高了一层，肯定不平衡了
+					__LeftBalance(theRoot);
+					break;
+				case 0:
+					theRoot->bf = 1;//原本一样高，因为又插入了一个，所以左边高了
+					*taller = true;
+					break;
+				case -1:
+					theRoot->bf = 0;//原本右边高，插入一个之后一样高了
+					*taller = false;
+					break;
+				default:
+					break;
+				}
 			}
-			//RR
 		}
-		else if ((pointerA->nodeData == 1) && (direction == left))
+		else//thePair.first > theRoot->element.first 要插入的大于当前结点
 		{
-			//LL
-		}
-		else if ((pointer->nodeData == -1) && (direction == right))
-		{
-			//RL
-		}
-		else if ((pointer->nodeData == 1) && (direction == left))
-		{
-			//LR
+			if (__Insert(theRoot->rightChild, thePair, taller) == false)
+				return false;
+			if (*taller)
+			{
+				case 1:
+					theRoot->bf = 0;
+					*taller = false;
+					break;
+				case 0:
+					theRoot->bf = -1;
+					*taller = true;
+					break;
+				case -1:
+					__RightBalance(theRoot);
+					break;
+				default:
+					break;
+			}
 		}
 	}
 }
 template <class K, class V>
-void BalanceBinarySearchTree<K, V>::earse(const K& theKey)
+void BalanceBinarySearchTree<K, V>::Earse(const K& theKey)
 {
 	BinarySearchTree<K, V>::earse(theKey);
 	//恢复平衡
@@ -152,5 +202,5 @@ template <class K, class V>
 static void outputAVL(binaryTreeNode<pair<K, V>>* theNodePointer)
 {
 	cout << theNodePointer->element.first << ":" << theNodePointer->element.second 
-		 << " height:" << theNodePointer->height << " bf:" << theNodePointer->nodeData << endl;
+		 << " height:" << theNodePointer->height << " bf:" << theNodePointer->bf << endl;
 }

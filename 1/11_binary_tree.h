@@ -3,7 +3,7 @@ template<class T>
 struct binaryTreeNode
 {
 	T element;
-	int nodeData;//拓展之用
+	int bf;//balance factor平衡因子,左子树高-右子树高
 	int height = 1;//树高
 	binaryTreeNode* leftChild;
 	binaryTreeNode* rightChild;
